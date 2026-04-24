@@ -1,0 +1,97 @@
+
+> uninexus-frontend@0.0.0 lint
+> eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0
+
+
+D:\Uninex Project\frontend\src\components\AdminRoute.jsx
+  1:8   error  'React' is defined but never used          no-unused-vars
+  2:10  error  'Navigate' is defined but never used       no-unused-vars
+  6:38  error  'children' is missing in props validation  react/prop-types
+
+D:\Uninex Project\frontend\src\components\Footer.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+D:\Uninex Project\frontend\src\components\Header.jsx
+   1:8   error  'React' is defined but never used                                no-unused-vars
+  17:35  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\Uninex Project\frontend\src\components\Navbar.jsx
+  1:8   error  'React' is defined but never used                 no-unused-vars
+  5:19  error  'onToggleSidebar' is missing in props validation  react/prop-types
+
+D:\Uninex Project\frontend\src\components\ProtectedRoute.jsx
+  1:8   error  'React' is defined but never used          no-unused-vars
+  5:42  error  'children' is missing in props validation  react/prop-types
+
+D:\Uninex Project\frontend\src\components\ResourceCard.jsx
+   1:8   error  'React' is defined but never used                                    no-unused-vars
+   5:3   error  'resource' is missing in props validation                            react/prop-types
+   6:3   error  'onBookmark' is missing in props validation                          react/prop-types
+   7:3   error  'onDownload' is missing in props validation                          react/prop-types
+   8:3   error  'isBookmarked' is missing in props validation                        react/prop-types
+   9:3   error  'showActions' is missing in props validation                         react/prop-types
+  10:3   error  'onEdit' is missing in props validation                              react/prop-types
+  11:3   error  'onDelete' is missing in props validation                            react/prop-types
+  14:5   error  'resource._id' is missing in props validation                        react/prop-types
+  15:5   error  'resource.title' is missing in props validation                      react/prop-types
+  16:5   error  'resource.subject' is missing in props validation                    react/prop-types
+  17:5   error  'resource.moduleCode' is missing in props validation                 react/prop-types
+  18:5   error  'resource.fileType' is missing in props validation                   react/prop-types
+  19:5   error  'resource.year' is missing in props validation                       react/prop-types
+  20:5   error  'resource.semester' is missing in props validation                   react/prop-types
+  21:5   error  'resource.uploadedBy' is missing in props validation                 react/prop-types
+  22:5   error  'resource.viewCount' is missing in props validation                  react/prop-types
+  23:5   error  'resource.downloadCount' is missing in props validation              react/prop-types
+  24:5   error  'resource.createdAt' is missing in props validation                  react/prop-types
+  30:32  error  'resource.uploadedBy.name' is missing in props validation            react/prop-types
+  30:50  error  'resource.uploadedBy.name' is missing in props validation            react/prop-types
+  30:55  error  'resource.uploadedBy.name.substring' is missing in props validation  react/prop-types
+  96:71  error  'resource.uploadedBy.name' is missing in props validation            react/prop-types
+
+D:\Uninex Project\frontend\src\components\Sidebar.jsx
+  1:8   error  'React' is defined but never used          no-unused-vars
+  1:17  error  'useState' is defined but never used       no-unused-vars
+  4:20  error  'isOpen' is missing in props validation    react/prop-types
+  4:28  error  'onToggle' is missing in props validation  react/prop-types
+  4:28  error  'onToggle' is defined but never used       no-unused-vars
+
+D:\Uninex Project\frontend\src\context\AuthContext.jsx
+   1:8   error    'React' is defined but never used                                                                                               no-unused-vars
+   4:14  warning  Fast refresh only works when a file only exports components. Move your React context(s) to a separate file                      react-refresh/only-export-components
+   6:32  error    'children' is missing in props validation                                                                                       react/prop-types
+  96:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Uninex Project\frontend\src\context\ToastContext.jsx
+   1:8   error    'React' is defined but never used                                                                                               no-unused-vars
+   5:33  error    'children' is missing in props validation                                                                                       react/prop-types
+  66:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Uninex Project\frontend\src\pages\Auth\Login.jsx
+    1:8   error  'React' is defined but never used                                no-unused-vars
+  369:18  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\Uninex Project\frontend\src\pages\Auth\Register.jsx
+    1:8   error  'React' is defined but never used                                no-unused-vars
+  169:77  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\Uninex Project\frontend\src\pages\Dashboard.jsx
+  1:8   error  'React' is defined but never used          no-unused-vars
+  7:28  error  'end' is missing in props validation       react/prop-types
+  7:33  error  'duration' is missing in props validation  react/prop-types
+  7:50  error  'isFloat' is missing in props validation   react/prop-types
+
+D:\Uninex Project\frontend\src\pages\Resources\MyBookmarks.jsx
+   1:8  error    'React' is defined but never used                                                                                  no-unused-vars
+  23:6  warning  React Hook useEffect has a missing dependency: 'fetchBookmarks'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\Uninex Project\frontend\src\pages\Resources\ResourcesPage.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+D:\Uninex Project\frontend\src\pages\Resources\UploadResource.jsx
+    1:8   error  'React' is defined but never used        no-unused-vars
+    1:27  error  'useCallback' is defined but never used  no-unused-vars
+  403:19  error  'title' is missing in props validation   react/prop-types
+  403:26  error  'sub' is missing in props validation     react/prop-types
+
+✖ 60 problems (56 errors, 4 warnings)
+

@@ -1,0 +1,29 @@
+/* Header.css */
+
+.header-container {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-brand-text {
+  background: linear-gradient(90deg, #00c2cb, #7c3aed);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-subtitle-text {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.header-avatar {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.header-dropdown {
+  background: rgba(10, 10, 26, 0.95);
+  backdrop-filter: blur(20px);
+}

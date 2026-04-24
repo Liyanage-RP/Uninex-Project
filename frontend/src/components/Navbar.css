@@ -1,0 +1,35 @@
+/* Navbar.css */
+
+.navbar-container {
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navbar-link {
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.navbar-link.active {
+  color: #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.navbar-search-input {
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 32px;
+  padding-right: 28px;
+}
+
+/* Hide scrollbar for overflowing nav links */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
