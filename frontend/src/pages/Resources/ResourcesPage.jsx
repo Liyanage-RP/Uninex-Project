@@ -8,6 +8,7 @@ import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { FaTrophy as Trophy, FaEye as Eye, FaDownload as Download } from 'react-icons/fa';
 
 export default function ResourcesPage() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function ResourcesPage() {
   const [resources, setResources] = useState([]);
   const [popular, setPopular] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
+  const [topResources, setTopResources] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // View toggle
@@ -101,7 +103,17 @@ export default function ResourcesPage() {
   useEffect(() => {
     fetchPopular();
     fetchBookmarks();
-  }, []);
+    
+    const fetchTopResources = async () => {
+      try {
+        const { data } = await axiosInstance.get('/resources/top');
+        setTopResources(data.data);
+      } catch (err) {
+        addToast('Failed to load top resources', 'error');
+      }
+    };
+    fetchTopResources();
+  }, [addToast]);
 
   // Handlers
   const handleFilterChange = (e) => {
@@ -130,7 +142,12 @@ export default function ResourcesPage() {
     }
   };
 
-  const handleDownload = async (resourceId) => {
+  const handleView = (resource) => {
+    navigate(`/resources/${resource._id}`);
+  };
+
+  const handleDownload = async (resource) => {
+    const resourceId = resource._id || resource;
     try {
       // 1. Tell backend to increment counts
       const { data } = await axiosInstance.put(`/resources/${resourceId}/download`);
@@ -140,7 +157,7 @@ export default function ResourcesPage() {
       const targetUrl = updatedResource.fileType === 'pdf' ? `http://localhost:5000${updatedResource.fileUrl}` : updatedResource.videoUrl;
       window.open(targetUrl, '_blank');
 
-      // 3. Update local state to reflect new downloadCount instantly (viewCount is tracked server-side on GET /:id)
+      // 3. Update local state to reflect new downloadCount instantly
       setResources(prev => prev.map(r => r._id === resourceId ? { ...r, downloadCount: r.downloadCount + 1 } : r));
       setPopular(prev => prev.map(r => r._id === resourceId ? { ...r, downloadCount: r.downloadCount + 1 } : r));
     } catch (err) {
@@ -265,6 +282,56 @@ export default function ResourcesPage() {
                       onEdit={() => openEdit(res)}
                       onDelete={() => setShowConfirmModal(res._id)}
                     />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+
+          {/* TOP RESOURCES SECTION */}
+          {topResources.length > 0 && (
+            <div className="mb-12 fade-up" style={{ animationDelay: '0.15s' }}>
+              <div className="flex items-center gap-2 mb-6">
+                <Trophy className="text-amber-400 w-7 h-7" />
+                <h2 className="text-2xl font-bold text-white">Top Resources</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {topResources.map((res) => (
+                  <div 
+                    key={`top-${res._id}`} 
+                    className="rounded-xl border-2 border-amber-400 bg-amber-50 shadow-md p-4 transition-transform hover:scale-[1.02] flex flex-col h-full"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <Trophy className="text-amber-400 w-5 h-5 shrink-0" />
+                      <h3 className="font-bold text-gray-900 line-clamp-1">{res.title}</h3>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <span className="px-2 py-0.5 bg-gray-200 text-gray-700 rounded text-xs">{res.subject}</span>
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">Year {res.year}</span>
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">Sem {res.semester}</span>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
+                      <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{res.viewCount}</span>
+                      <span className="flex items-center gap-1"><Download className="w-3 h-3" />{res.downloadCount}</span>
+                    </div>
+
+                    <div className="flex gap-2 mt-auto">
+                      <button 
+                        onClick={() => handleView(res)} 
+                        className="flex-1 py-2 text-xs border border-amber-400 text-amber-600 rounded-lg hover:bg-amber-50"
+                      >
+                        View
+                      </button>
+                      <button 
+                        onClick={() => handleDownload(res)} 
+                        className="flex-1 py-2 text-xs bg-amber-400 text-white rounded-lg hover:bg-amber-500"
+                      >
+                        Download
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
