@@ -4,7 +4,7 @@ const {
   uploadResource, getAllResources,
   getPopularResources, getMyResources,
   getResourceById, updateResource,
-  deleteResource, incrementDownload
+  deleteResource, incrementDownload, getTopResources
 } = require('../controllers/resourceController')
 const { protect } = require('../middleware/authMiddleware')
 const upload = require('../middleware/uploadMiddleware')
@@ -19,6 +19,7 @@ router.get('/popular', getPopularResources)
 
 // Protected
 router.get('/my', protect, getMyResources)
+router.get('/top', getTopResources)
 router.get('/:id', protect, getResourceById)
 router.post('/', protect, upload.single('file'), uploadResource)
 router.put('/:id', protect, updateResource)
