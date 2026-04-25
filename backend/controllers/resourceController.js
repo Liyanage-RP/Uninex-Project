@@ -331,3 +331,25 @@ exports.incrementDownload = async (req, res) => {
     })
   }
 }
+
+// GET /api/resources/top
+// Returns top 3 resources sorted by viewCount descending
+exports.getTopResources = async (req, res) => {
+  try {
+    const resources = await Resource
+      .find()
+      .populate('uploadedBy', 'name')
+      .sort({ viewCount: -1 })
+      .limit(3)
+
+    return res.status(200).json({
+      success: true,
+      data: resources
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}

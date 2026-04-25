@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import axiosInstance from '../api/axiosInstance';
 
 function AnimatedCounter({ end, duration = 2000, isFloat = false }) {
   const [count, setCount] = useState(0);
@@ -29,12 +30,30 @@ function AnimatedCounter({ end, duration = 2000, isFloat = false }) {
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [loaded, setLoaded] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoaded(true);
     }, 50);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [listingsRes, eventsRes] = await Promise.all([
+          axiosInstance.get('/listings'),
+          axiosInstance.get('/events')
+        ]);
+        setListings(listingsRes.data.data.slice(0, 3)); // Get top 3
+        setEvents(eventsRes.data.data.slice(0, 3)); // Get top 3
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   const glassBase = {
@@ -289,69 +308,31 @@ function Dashboard() {
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-                
-                {/* Row 1 */}
-                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '12px 16px' }} className="group transition-colors hover:border-[#00c2cb]/30">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '50%' }}>
-                    <span style={{ fontSize: '20px' }}></span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span className="group-hover:text-white transition-colors truncate" style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.9)' }}>Python Textbook</span>
-                      <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '2px 8px', fontSize: '10px', color: 'rgba(255,255,255,0.5)', width: 'fit-content' }}>BOOKS</div>
+                {listings.length === 0 ? (
+                  <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>No listings found</div>
+                ) : (
+                  listings.map(listing => (
+                    <div key={listing._id} style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '12px 16px' }} className="group transition-colors hover:border-[#00c2cb]/30">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '50%' }}>
+                        <span style={{ fontSize: '20px' }}></span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span className="group-hover:text-white transition-colors truncate" style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.9)', textDecoration: listing.status === 'Sold' ? 'line-through' : 'none' }}>{listing.title}</span>
+                          <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '2px 8px', fontSize: '10px', color: 'rgba(255,255,255,0.5)', width: 'fit-content', textTransform: 'uppercase' }}>{listing.category}</div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '25%', gap: '4px' }}>
+                        <span style={{ color: '#00c2cb', fontWeight: 600, fontSize: '14px' }}>Rs.{listing.price}</span>
+                        <div style={{ background: listing.status === 'Available' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)', borderRadius: '8px', border: listing.status === 'Available' ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(239,68,68,0.2)', color: listing.status === 'Available' ? '#10b981' : '#ef4444', padding: '2px 8px', fontSize: '10px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: listing.status === 'Available' ? '#10b981' : '#ef4444' }}></span> {listing.status}
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', width: '25%', gap: '8px', color: 'rgba(255,255,255,0.5)' }}>
+                        <button className="hover:text-[#00c2cb] transition-colors" disabled={listing.status === 'Sold'}>️</button>
+                        <button className="hover:text-[#ef4444] transition-colors">️</button>
+                      </div>
                     </div>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '25%', gap: '4px' }}>
-                    <span style={{ color: '#00c2cb', fontWeight: 600, fontSize: '14px' }}>Rs.800</span>
-                    <div style={{ background: 'rgba(16,185,129,0.15)', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', color: '#10b981', padding: '2px 8px', fontSize: '10px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></span> Available
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '25%', gap: '8px', color: 'rgba(255,255,255,0.5)' }}>
-                    <button className="hover:text-[#00c2cb] transition-colors">️</button>
-                    <button className="hover:text-[#ef4444] transition-colors">️</button>
-                  </div>
-                </div>
-
-                {/* Row 2 */}
-                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '12px 16px' }} className="group transition-colors hover:border-[#00c2cb]/30">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '50%' }}>
-                    <span style={{ fontSize: '20px' }}></span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span className="group-hover:text-white transition-colors truncate" style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.9)' }}>Scientific Calculator</span>
-                      <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '2px 8px', fontSize: '10px', color: 'rgba(255,255,255,0.5)', width: 'fit-content' }}>TOOLS</div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '25%', gap: '4px' }}>
-                    <span style={{ color: '#00c2cb', fontWeight: 600, fontSize: '14px' }}>Rs.1200</span>
-                    <div style={{ background: 'rgba(16,185,129,0.15)', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', color: '#10b981', padding: '2px 8px', fontSize: '10px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></span> Available
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '25%', gap: '8px', color: 'rgba(255,255,255,0.5)' }}>
-                    <button className="hover:text-[#00c2cb] transition-colors">️</button>
-                    <button className="hover:text-[#ef4444] transition-colors">️</button>
-                  </div>
-                </div>
-
-                {/* Row 3 */}
-                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '12px 16px', opacity: 0.6 }} className="group transition-colors hover:border-[#00c2cb]/30">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '50%' }}>
-                    <span style={{ fontSize: '20px', filter: 'grayscale(1)' }}></span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span className="group-hover:text-white transition-colors truncate" style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(255,255,255,0.9)', textDecoration: 'line-through' }}>Lab Coat (Size M)</span>
-                      <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '2px 8px', fontSize: '10px', color: 'rgba(255,255,255,0.5)', width: 'fit-content' }}>CLOTHING</div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '25%', gap: '4px' }}>
-                    <span style={{ color: '#00c2cb', fontWeight: 600, fontSize: '14px' }}>Rs.500</span>
-                    <div style={{ background: 'rgba(239,68,68,0.15)', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', padding: '2px 8px', fontSize: '10px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444' }}></span> Sold
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '25%', gap: '8px', color: 'rgba(255,255,255,0.5)' }}>
-                    <button className="hover:text-[#00c2cb] transition-colors" disabled>️</button>
-                    <button className="hover:text-[#ef4444] transition-colors">️</button>
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
               
               <button 
@@ -370,44 +351,23 @@ function Dashboard() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {/* Event 1 */}
-                <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', borderLeft: '3px solid #7c3aed', padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>Chess Club Meeting</h3>
-                    <div style={{ background: 'rgba(124,58,237,0.15)', borderRadius: '8px', border: '1px solid rgba(124,58,237,0.2)', color: '#7c3aed', padding: '2px 8px', fontSize: '10px', fontWeight: 700 }}>CHESS CLUB</div>
-                  </div>
-                  <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
-                    <span> Tomorrow</span>
-                    <span> 3:00 PM</span>
-                    <span> Room 401</span>
-                  </div>
-                </div>
-
-                {/* Event 2 */}
-                <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', borderLeft: '3px solid #10b981', padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>Cricket Practice</h3>
-                    <div style={{ background: 'rgba(16,185,129,0.15)', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', color: '#10b981', padding: '2px 8px', fontSize: '10px', fontWeight: 700 }}>CRICKET</div>
-                  </div>
-                  <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
-                    <span> Sat Mar 29</span>
-                    <span> 5:00 PM</span>
-                    <span> Sports Ground</span>
-                  </div>
-                </div>
-
-                {/* Event 3 */}
-                <div style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', borderLeft: '3px solid #00c2cb', padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>Coding Bootcamp</h3>
-                    <div style={{ background: 'rgba(0,194,203,0.15)', borderRadius: '8px', border: '1px solid rgba(0,194,203,0.2)', color: '#00c2cb', padding: '2px 8px', fontSize: '10px', fontWeight: 700 }}>IT SOCIETY</div>
-                  </div>
-                  <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
-                    <span> Sun Mar 30</span>
-                    <span> 10:00 AM</span>
-                    <span> Lab 302</span>
-                  </div>
-                </div>
+                {events.length === 0 ? (
+                  <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>No upcoming events</div>
+                ) : (
+                  events.map(event => (
+                    <div key={event._id} style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', borderLeft: '3px solid #7c3aed', padding: '16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                        <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>{event.title}</h3>
+                        <div style={{ background: 'rgba(124,58,237,0.15)', borderRadius: '8px', border: '1px solid rgba(124,58,237,0.2)', color: '#7c3aed', padding: '2px 8px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase' }}>{event.clubName}</div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
+                        <span> {new Date(event.date).toLocaleDateString()}</span>
+                        <span> {event.time}</span>
+                        <span> {event.location}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </section>
