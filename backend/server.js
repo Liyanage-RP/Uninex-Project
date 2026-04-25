@@ -13,6 +13,8 @@ const postRoutes = require('./routes/postRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const listingRoutes = require('./routes/listingRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 
 // Load env vars
 dotenv.config();
@@ -56,6 +58,8 @@ app.use('/api/posts', postRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/listings', listingRoutes);
+app.use('/api/events', eventRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
